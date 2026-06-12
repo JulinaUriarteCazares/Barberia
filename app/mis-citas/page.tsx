@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 import { Download, Search, Calendar, X } from "lucide-react";
 import { PublicHeader, PublicFooter } from "@/components/layout/public-header";
+import { PublicBreadcrumb } from "@/components/layout/public-breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -103,6 +104,7 @@ export default function MisCitasPage() {
     <div className="flex min-h-screen flex-col">
       <PublicHeader />
       <main className="container mx-auto flex-1 px-4 py-12">
+        <PublicBreadcrumb items={[{ label: "Mis Citas" }]} />
         <h1 className="mb-2 text-3xl font-bold">Mis Citas</h1>
         <p className="mb-8 text-muted-foreground">
           Consulta tus citas introduciendo el email con el que reservaste

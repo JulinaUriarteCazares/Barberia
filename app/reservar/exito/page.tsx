@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
+import { PublicBreadcrumb } from "@/components/layout/public-breadcrumb";
 
 type PagoData = {
   paid: boolean;
@@ -265,6 +266,9 @@ export default function ExitoPage() {
     <div className="flex min-h-screen flex-col">
       <PublicHeader />
       <main className="flex-1">
+        <div className="container mx-auto max-w-lg px-4 pt-6">
+          <PublicBreadcrumb items={[{ label: "Reservar", href: "/reservar" }, { label: "Confirmación" }]} />
+        </div>
         <Suspense fallback={
           <div className="flex flex-col items-center gap-4 py-24">
             <Skeleton className="size-16 rounded-full" />

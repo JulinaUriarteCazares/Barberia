@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 import { ArrowLeft, ArrowRight, CheckCircle2, Clock, Plus, Minus, ShoppingCart, CreditCard, Trash2, Lock } from "lucide-react";
 import { PublicHeader, PublicFooter } from "@/components/layout/public-header";
+import { PublicBreadcrumb } from "@/components/layout/public-breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -222,6 +223,7 @@ function ReservarContent() {
 
   return (
     <div className="container mx-auto max-w-2xl px-4 py-8">
+      <PublicBreadcrumb items={[{ label: "Reservar", href: "/reservar" }, { label: STEPS[step] }]} />
       {/* Stepper */}
       <div className="mb-8">
         <div className="flex items-center justify-between">
