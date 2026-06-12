@@ -88,6 +88,8 @@ npm run lint     # ESLint
 
 ## Dependencias
 
+npm install next@16.2.9 react@19.1.0 react-dom@19.1.0 @supabase/supabase-js@2.108.1 stripe@22.2.0 date-fns@4.1.0 react-day-picker@9.7.0 react-hook-form@7.57.0 @hookform/resolvers@5.0.1 zod@3.25.51 @react-pdf/renderer@4.3.0 recharts@2.15.3 sonner@2.0.5 bcryptjs@3.0.2 lucide-react@0.513.0 clsx@2.1.1 tailwind-merge@3.3.0 class-variance-authority@0.7.1 @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-label @radix-ui/react-select @radix-ui/react-slot @radix-ui/react-switch @radix-ui/react-tabs @radix-ui/react-tooltip @radix-ui/react-popover @radix-ui/react-accordion
+
 ### Producción
 
 | Paquete | Versión | Uso |
