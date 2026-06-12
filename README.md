@@ -128,51 +128,6 @@ npm run lint     # ESLint
 
 ---
 
-## Estructura del proyecto
-
-```
-BarberHost/
-├── app/
-│   ├── page.tsx                   # Página de inicio pública
-│   ├── reservar/
-│   │   ├── page.tsx               # Flujo de reserva (4 pasos)
-│   │   └── exito/page.tsx         # Confirmación tras el pago
-│   ├── mis-citas/page.tsx         # Consulta/reprogramar citas por email
-│   ├── admin/(panel)/
-│   │   ├── page.tsx               # Dashboard con estadísticas
-│   │   ├── citas/page.tsx         # Gestión de citas
-│   │   ├── calendario/page.tsx    # Vista mensual/semanal/diaria
-│   │   ├── servicios/page.tsx     # CRUD de servicios
-│   │   ├── clientes/page.tsx      # Historial de clientes
-│   │   └── dias-bloqueados/page.tsx  # Bloqueo de días y horarios
-│   └── api/
-│       ├── citas/                 # CRUD citas + hold temporal de slots
-│       ├── stripe/checkout/       # Crear sesión de pago Stripe
-│       ├── stripe/verify/         # Confirmar pago y actualizar cita
-│       ├── email/comprobante/     # Envío de email de confirmación
-│       ├── admin/                 # Auth admin (login/logout/dashboard)
-│       ├── servicios/             # API pública de servicios
-│       ├── clientes/              # API de clientes (admin)
-│       └── dias-bloqueados/       # API de bloqueos (admin)
-├── components/
-│   ├── layout/                    # Header, Footer, Breadcrumbs
-│   ├── ui/                        # Componentes shadcn/ui
-│   └── shared/                    # Badges, estados compartidos
-├── lib/
-│   ├── db.ts                      # Todas las funciones de base de datos
-│   ├── utils.ts                   # Formateo de fechas y moneda
-│   ├── types.ts                   # Tipos TypeScript globales
-│   ├── validators.ts              # Esquemas Zod
-│   ├── auth.ts                    # Autenticación admin (cookies)
-│   └── pdf-export.tsx             # Generación de PDFs con react-pdf
-├── proxy.ts                       # Middleware de rutas (protege /admin)
-├── next.config.ts
-├── .env.local                     # Variables de entorno (no committear)
-└── package.json
-```
-
----
-
 ## Flujo de reserva
 
 1. **Servicios** — El cliente elige uno o más servicios del catálogo
