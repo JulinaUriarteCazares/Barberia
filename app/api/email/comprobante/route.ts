@@ -14,9 +14,9 @@ export async function POST(request: Request) {
     const email     = to ?? cita?.cliente_email ?? stripe_data?.customer_email;
     const servicio  = cita?.servicio_nombre ?? "Servicio";
     const fecha     = cita?.fecha_hora
-      ? new Date(cita.fecha_hora).toLocaleString("es-MX", {
+      ? new Date(String(cita.fecha_hora).slice(0, 19)).toLocaleString("es-MX", {
           weekday: "long", year: "numeric", month: "long", day: "numeric",
-          hour: "2-digit", minute: "2-digit",
+          hour: "2-digit", minute: "2-digit", hour12: false,
         })
       : "";
     const total     = cita?.precio_total ?? stripe_data?.amount ?? 0;
