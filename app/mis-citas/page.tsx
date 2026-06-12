@@ -17,11 +17,20 @@ import { exportCitaComprobante } from "@/lib/pdf-export";
 import { formatDateTime, formatCurrency } from "@/lib/utils";
 import type { CitaConDetalles } from "@/lib/types";
 
+const normalizeTel = (tel: string) => tel.replace(/[\s\-\(\)\.]/g, "");
+
 export default function MisCitasPage() {
   const [email, setEmail] = useState("");
   const [citas, setCitas] = useState<CitaConDetalles[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+
+  // Verificación de teléfono
+  const [verifyFor, setVerifyFor] = useState<CitaConDetalles | null>(null);
+  const [phoneInput, setPhoneInput] = useState("");
+  const [phoneError, setPhoneError] = useState(false);
+
+  // Reprogramar
   const [reprogramarId, setReprogramarId] = useState<number | null>(null);
   const [newDate, setNewDate] = useState<Date | undefined>();
   const [newSlot, setNewSlot] = useState("");
@@ -61,18 +70,34 @@ export default function MisCitasPage() {
     }
   };
 
-  const abrirReprogramar = async (cita: CitaConDetalles) => {
-    setReprogramarId(cita.id);
-    setNewDate(undefined);
-    setNewSlot("");
-    setSlots([]);
+  // Paso 1: pedir verificación de teléfono
+  const pedirVerificacion = (cita: CitaConDetalles) => {
+    setVerifyFor(cita);
+    setPhoneInput("");
+    setPhoneError(false);
+  };
+
+  // Paso 2: verificar y abrir reprogramar si coincide
+  const confirmarTelefono = () => {
+    if (!verifyFor) return;
+    if (normalizeTel(phoneInput) === normalizeTel(verifyFor.cliente_telefono ?? "")) {
+      setVerifyFor(null);
+      setReprogramarId(verifyFor.id);
+      setNewDate(undefined);
+      setNewSlot("");
+      setSlots([]);
+    } else {
+      setPhoneError(true);
+    }
   };
 
   const cargarSlots = async (date: Date, cita: CitaConDetalles) => {
     setNewDate(date);
+    setNewSlot("");
     const fecha = format(date, "yyyy-MM-dd");
+    const duracion = (cita.duracion_total ?? 0) > 0 ? cita.duracion_total : cita.servicio_duracion;
     const res = await fetch(
-      `/api/citas?fecha=${fecha}&duracion=${cita.servicio_duracion}&exclude_id=${cita.id}`
+      `/api/citas?fecha=${fecha}&duracion=${duracion}&exclude_id=${cita.id}`
     );
     setSlots(await res.json());
   };
@@ -149,19 +174,19 @@ export default function MisCitasPage() {
                 <p className="text-sm">{formatCurrency(cita.servicio_precio)} · Ref. #{cita.id}</p>
                 {cita.estado !== "cancelada" && cita.estado !== "completada" && (
                   <div className="mt-4 flex flex-wrap gap-2">
-                    <Button size="sm" variant="outline" onClick={() => abrirReprogramar(cita)}>
+                    <Button size="sm" variant="outline" onClick={() => pedirVerificacion(cita)}>
                       <Calendar className="size-4" /> Reprogramar
                     </Button>
                     <Button size="sm" variant="destructive" onClick={() => cancelar(cita.id)}>
                       <X className="size-4" /> Cancelar
                     </Button>
-                    <Button size="sm" variant="secondary" onClick={() => exportCitaComprobante(cita)}>
+                    <Button size="sm" variant="secondary" onClick={() => exportCitaComprobante({ ...cita, cliente_telefono: undefined })}>
                       <Download className="size-4" /> PDF
                     </Button>
                   </div>
                 )}
                 {(cita.estado === "cancelada" || cita.estado === "completada") && (
-                  <Button size="sm" variant="secondary" className="mt-4" onClick={() => exportCitaComprobante(cita)}>
+                  <Button size="sm" variant="secondary" className="mt-4" onClick={() => exportCitaComprobante({ ...cita, cliente_telefono: undefined })}>
                     <Download className="size-4" /> Descargar comprobante
                   </Button>
                 )}
@@ -170,6 +195,41 @@ export default function MisCitasPage() {
           ))}
         </div>
 
+        {/* Dialog: verificación de teléfono */}
+        <Dialog open={!!verifyFor} onOpenChange={() => setVerifyFor(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Verificar identidad</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Introduce el número de teléfono que registraste al hacer la cita para poder reprogramarla.
+              </p>
+              <div className="space-y-1">
+                <Label htmlFor="tel-verify">Número de teléfono</Label>
+                <Input
+                  id="tel-verify"
+                  type="tel"
+                  placeholder="ej. 555 123 4567"
+                  value={phoneInput}
+                  onChange={(e) => { setPhoneInput(e.target.value); setPhoneError(false); }}
+                  onKeyDown={(e) => e.key === "Enter" && confirmarTelefono()}
+                  className={phoneError ? "border-destructive focus-visible:ring-destructive" : ""}
+                />
+                {phoneError && (
+                  <p className="text-sm text-destructive">
+                    El número no coincide. Intenta de nuevo.
+                  </p>
+                )}
+              </div>
+              <Button className="w-full" onClick={confirmarTelefono} disabled={!phoneInput.trim()}>
+                Continuar
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Dialog: reprogramar */}
         <Dialog open={!!reprogramarId} onOpenChange={() => setReprogramarId(null)}>
           <DialogContent>
             <DialogHeader>

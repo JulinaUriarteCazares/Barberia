@@ -112,7 +112,6 @@ function ExitoContent() {
       precio_total:    data.precio_total,
       cliente_nombre:  data.nombre,
       cliente_email:   data.email,
-      cliente_telefono: data.telefono,
       fecha_hora:      data.fecha_hora,
       duracion_total:  data.duracion_total,
       notas:           data.notas,

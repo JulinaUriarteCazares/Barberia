@@ -93,9 +93,10 @@ export async function exportCitaComprobante(cita: {
 
         <View style={styles.section}>
           <Text style={styles.label}>Fecha y hora</Text>
-          <Text>{new Date(cita.fecha_hora).toLocaleString("es-MX", {
+          <Text>{new Date(cita.fecha_hora.slice(0, 19)).toLocaleString("es-MX", {
             weekday: "long", year: "numeric", month: "long",
             day: "numeric", hour: "2-digit", minute: "2-digit",
+            hour12: false,
           })}</Text>
         </View>
 
